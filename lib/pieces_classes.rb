@@ -1,7 +1,15 @@
 #ruby lib/pieces_classes.rb
+class VoidPiece
+  attr_accessor :piece, :position
+
+  def initialize color, position
+    @piece = :empty
+    @position = position
+  end
+end
 
 class Pawn
-  attr_accessor :piece, :color, :position
+  attr_accessor :piece, :color, :position, :grid
 
   def initialize color, position
     @piece = :pawn
