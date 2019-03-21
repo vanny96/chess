@@ -2,7 +2,7 @@
 class VoidPiece
   attr_accessor :piece, :position
 
-  def initialize color, position
+  def initialize position
     @piece = :empty
     @position = position
   end
@@ -31,5 +31,3 @@ class Pawn
   end
 end
 
-pawn = Pawn.new :white, [1,1]
-puts pawn.piece
