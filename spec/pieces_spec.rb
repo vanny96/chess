@@ -208,29 +208,57 @@ describe Queen do
 end
 
 
+#_________________________
+#H|  |  |  |♔6|  |  |♟4|♔3|
+# _________________________
+#G|  |  |  |♝ |  |  |  |♙3|
+# _________________________
+#F|  |♚5|♙ |  |  |  |  |  |
+# _________________________
+#E|  |  |  |  |  |♔7|  |  |
+# _________________________
+#D|  |  |  |♚7|  |  |  |  |
+# _________________________
+#C|  |  |  |  |  |  |  |  |
+# _________________________
+#B|  |  |  |♚1|  |  |  |  |
+# _________________________
+#A|♔2|  |  |  |  |  |  |  |
+#  1  2  3  4  5  6  7  8
 
 describe King do
   describe "#possible_moves" do
     game = Chess.new
     game.load_grid "spec/pieces_tests/king_test.yml"
+
+    #1
     it "Can move in all directions if free" do
       expect(game.grid[1][3].possible_moves).to eql([[2, 3], [2, 4], [1, 4], [0, 4], 
                                                       [0, 3], [0, 2], [1, 2], [2, 2]])  
     end
+    #2
     it "Works near the edges" do
       expect(game.grid[0][0].possible_moves).to eql([[1, 0], [1, 1], [0, 1]]) 
     end
+    #3
     it "It's blocked by allies" do
       expect(game.grid[7][7].possible_moves.include? [6,7]).to eql(false) 
     end
+    #4
     it "Isn't blocked by enemies" do
       expect(game.grid[7][7].possible_moves.include? [7,6]).to eql(true) 
     end
+    #5
     it "Can't move on menaced cells" do
       expect(game.grid[5][1].possible_moves.include? [4,1]).to eql(false) 
     end
+    #6
     it "Can't move on menaced cells -2" do
       expect(game.grid[7][3].possible_moves.include? [7,4]).to eql(false) 
+    end
+    #7
+    it "Stops two kings to move on a cell menaced from the other" do
+      expect(game.grid[3][3].possible_moves.include? [3,4]).to eql(false)  
     end
   end
 end

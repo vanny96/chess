@@ -374,7 +374,7 @@ class King
     @parent = parent
   end
 
-  def possible_moves
+  def possible_moves stop = false
     possible = []
 
     possible << [@position[0] + 1, @position[1]]      if check_cell 1,0
@@ -385,6 +385,12 @@ class King
     possible << [@position[0] - 1, @position[1] - 1]  if check_cell -1,-1
     possible << [@position[0], @position[1] - 1]      if check_cell 0,-1
     possible << [@position[0] + 1, @position[1] - 1]  if check_cell 1,-1
+
+    return possible if stop
+
+    possible = possible.filter do |move|
+      !@parent.check_all_possible_moves(@color == :white ? :black : :white).include?([move[0], move[1]])
+    end
 
     possible
   end
@@ -400,7 +406,7 @@ class King
 
     return false if @parent.grid[position_y][position_x].color == @color
 
-    return false if @parent.check_all_possible_moves(@color == :white ? :black : :white).include? [position_y, position_x]
+    
 
     return true
   end

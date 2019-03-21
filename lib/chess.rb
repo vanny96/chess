@@ -65,9 +65,13 @@ class Chess
     possible = []
     grid.each do |row|
       row.each do |cell|
-        if cell.color == color && cell.piece != :king
+        if cell.color == color
           if cell.piece == :pawn
             cell.check_attacking_positions.each do |move|
+              possible << move
+            end
+          elsif cell.piece == :king
+            cell.possible_moves(true).each do |move|
               possible << move
             end
           else
@@ -81,7 +85,7 @@ class Chess
     possible.uniq
   end
 
-  #functions to save and load grids
+  #Functions to save and load grids
   def save_grid
     File.open 'default_game.yml', 'w' do |file|
       save = []
@@ -125,8 +129,7 @@ end
 game = Chess.new
 game.load_grid "spec/pieces_tests/king_test.yml"
 
-
-
+game.display_grid
 
 
 

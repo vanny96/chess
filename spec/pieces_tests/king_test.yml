@@ -134,11 +134,11 @@
   - 3
   - 2
   :color: 
-- :piece: :empty
+- :piece: :king
   :position:
   - 3
   - 3
-  :color: 
+  :color: :white
 - :piece: :empty
   :position:
   - 3
@@ -184,11 +184,11 @@
   - 4
   - 4
   :color: 
-- :piece: :empty
+- :piece: :king
   :position:
   - 4
   - 5
-  :color: 
+  :color: :black
 - :piece: :empty
   :position:
   - 4
