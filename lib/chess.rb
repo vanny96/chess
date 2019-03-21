@@ -69,21 +69,22 @@ class Chess
   def load_grid file_route
     load = YAML.load_file file_route
     load.each do |piece|
+      position = piece[:position]
       if piece[:piece] == :empty
-        position = piece[:position]
         @grid[position[0]][position[1]] = VoidPiece.new position, self
       elsif piece[:piece] == :pawn
-        position = piece[:position]
         @grid[position[0]][position[1]] = Pawn.new piece[:color], position, self
+      elsif piece[:piece] == :rook
+        @grid[position[0]][position[1]] = Rook.new piece[:color], position, self
       end
     end 
   end
 end
 
 game = Chess.new
-game.load_grid "spec/pieces_spec.yml"
+game.load_grid "spec/rook_test.yml"
 
-game.display_grid
+
 
 #puts "\u265F".encode("utf-8")
 

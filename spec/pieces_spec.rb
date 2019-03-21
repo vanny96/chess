@@ -1,11 +1,29 @@
 require './lib/pieces_classes.rb'
 require_relative '../lib/chess.rb'
 
+#pawn_test scheme
+# _________________________
+#H|  |♟ |  |  |  |  |♙ |  |
+# _________________________
+#G|♟ |  |  |  |  |♟ |  |♟ |
+# _________________________
+#F|♟ |  |  |  |  |  |  |  |
+# _________________________
+#E|  |  |  |  |  |  |  |  |
+# _________________________
+#D|  |  |  |  |  |  |  |  |
+# _________________________
+#C|  |  |  |  |  |  |  |  |
+# _________________________
+#B|♙ |♙ |  |  |  |  |  |  |
+# _________________________
+#A|  |♙ |  |  |  |  |  |  |
+# 1  2  3  4  5  6  7  8
+
 describe Pawn do
   describe "#possible_moves" do
     game = Chess.new
-    game.load_grid "spec/pieces_spec.yml"
-    game.display_grid
+    game.load_grid "spec/pawn_test.yml"
 
   #1  
     it "Suggests moves forwards if it's white" do
@@ -42,6 +60,32 @@ describe Pawn do
   #9 
     it "Suggests possibility to eat a white piece on left and right -black" do 
       expect(game.grid[7][6].possible_moves).to eql([[6, 6], [6, 5], [6,7]])
+    end
+  end
+end
+
+describe Rook do
+  describe "#possible_moves" do
+    game = Chess.new
+    game.load_grid "spec/rook_test.yml"
+    
+  #1
+    it "Moves in horizontally and vertically" do
+      expect(game.grid[2][2].possible_moves).to eql([[1,2],[0,2],[3,2],[4,2],[5,2],[6,2],[7,2],
+                                                  [2,1],[2,0],[2,3],[2,4],[2,5],[2,6],[2,7]])
+    end  
+  #2
+    it "Works near the edges" do
+      expect(game.grid[0][0].possible_moves).to eql([[1,0],[2,0],[3,0],[4,0],[5,0],[6,0],[7,0],
+                                                    [0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7]])
+    end
+  #3
+    it "Suggests to eat an enemy" do
+      expect(game.grid[6][4].possible_moves.include?([6,6])).to eql(true)
+    end
+  #4 
+    it "Doesn't suggest to eat an ally" do
+      expect(game.grid[4][6].possible_moves.include?([6,6])).to eql(false)
     end
   end
 end
