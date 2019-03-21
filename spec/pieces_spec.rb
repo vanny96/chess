@@ -25,7 +25,7 @@ require_relative '../lib/chess.rb'
 describe Pawn do
   describe "#possible_moves" do
     game = Chess.new
-    game.load_grid "spec/pawn_test.yml"
+    game.load_grid "spec/pieces_tests/pawn_test.yml"
 
   #1  
     it "Suggests moves forwards if it's white" do
@@ -89,7 +89,7 @@ end
 describe Rook do
   describe "#possible_moves" do
     game = Chess.new
-    game.load_grid "spec/rook_test.yml"
+    game.load_grid "spec/pieces_tests/rook_test.yml"
     
   #1
     it "Moves in horizontally and vertically" do
@@ -108,6 +108,45 @@ describe Rook do
   #4 
     it "Doesn't suggest to eat an ally" do
       expect(game.grid[4][6].possible_moves.include?([6,6])).to eql(false)
+    end
+  end
+end
+
+# _________________________
+#H|  |  |  |  |  |  |  |  |
+# _________________________
+#G|  |  |  |  |♙3|  |  |  |
+# _________________________
+#F|  |♟2|  |  |  |  |  |  |
+# _________________________
+#E|  |  |♗2|  |  |  |  |  |
+# _________________________
+#D|  |  |  |  |  |  |  |  |
+# _________________________
+#C|  |  |♝1|  |  |  |  |  |
+# _________________________
+#B|  |  |  |  |  |  |  |  |
+# _________________________
+#A|  |  |  |  |  |  |  |  |
+# 1  2  3  4  5  6  7  8
+
+describe Bishop do
+  game = Chess.new
+  game.load_grid "spec/pieces_tests/bishop_test.yml"
+  describe "#possible_moves" do
+  
+  #1
+    it "Moves in diagonally" do
+      expect(game.grid[2][2].possible_moves).to eql([[1,1],[0,0],[1,3],[0,4],[3,1],[4,0],
+                                                     [3,3],[4,4],[5,5],[6,6],[7,7]])
+    end 
+  #2
+    it "Suggests to eat an enemy" do
+      expect(game.grid[4][2].possible_moves.include?([5,1])).to eql(true)
+    end
+  #4 
+    it "Doesn't suggest to eat an ally" do
+      expect(game.grid[4][2].possible_moves.include?([6,4])).to eql(false)
     end
   end
 end
