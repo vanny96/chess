@@ -1,18 +1,22 @@
 require './lib/pieces_classes.rb'
+require_relative '../lib/chess.rb'
 
 describe Pawn do
   describe "#possible_moves" do
+    game = Chess.new
+    game.load_grid "spec/pieces_spec.yml"
+
     it "Suggests moves forwards if it's white" do
-      pawn = Pawn.new :white, [1,1]
-      expect(pawn.possible_moves).to eql([[2,1]]) 
+      expect(game.grid[6][0].possible_moves).to eql([[7,0]])
     end
     it "Suggests moves backwards if it's black" do
-      pawn = Pawn.new :black, [1,1]
-      expect(pawn.possible_moves).to eql([[0,1]])
+      expect(game.grid[1][0].possible_moves).to eql([[0,0]])
     end
     it "Doesn't suggest anything if against the wall" do
-      pawn = Pawn.new :white, [7,2]
-      expect(pawn.possible_moves).to eql([])
+      expect(game.grid[7][1].possible_moves).to eql([])
+    end
+    it "Doesn't suggest anything if another piece occupies the slot" do
+      expect(game.grid[5][0].possible_moves).to eql([])
     end
   end
 end

@@ -22,11 +22,15 @@ class Pawn
   def possible_moves
     possible = []
     if color == :white
-      if (@position[0] >= 0 && @position[0] < 7)
+      if (@position[0] >= 0 && @position[0] < 7) &&
+          parent.grid[@position[0]+1][@position[1]].color.nil?
+
         possible << [@position[0]+1, @position[1]]
       end
     else
-      if (@position[0] > 0 && @position[0] <= 7)
+      if (@position[0] > 0 && @position[0] <= 7) &&
+        parent.grid[@position[0]-1][@position[1]].color.nil?
+
         possible << [@position[0]-1, @position[1]]
       end
     end

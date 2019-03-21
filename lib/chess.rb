@@ -6,6 +6,7 @@ class Chess
   attr_accessor :grid
 
   def initialize
+    empty_grid
   end
 
   def empty_grid
@@ -24,6 +25,7 @@ class Chess
     load_grid "default_game.yml"
   end
 
+  #functions to save and load grids
   def save_grid
     File.open 'default_game.yml', 'w' do |file|
       save = []
@@ -44,19 +46,17 @@ class Chess
         @grid[position[0]][position[1]] = VoidPiece.new position, self
       elsif piece[:piece] == :pawn
         position = piece[:position]
-        @grid[position[0]][position[1]] = Pawn.new position, piece[:color], self
+        @grid[position[0]][position[1]] = Pawn.new piece[:color], position, self
       end
     end 
   end
 end
 
-pawn = Pawn.new :black, [1,1]
-
 game = Chess.new
-game.empty_grid
-game.default_grid
+game.load_grid "spec/pieces_spec.yml"
 
-puts game.grid
+
+
 
 
 
