@@ -49,6 +49,8 @@ class Chess
           print cell.color == :white ? "\u265E".encode("utf-8") : "\u2658".encode("utf-8")
         elsif cell.is_a? Queen
           print cell.color == :white ? "\u265B".encode("utf-8") : "\u2655".encode("utf-8")
+        elsif cell.is_a? King
+          print cell.color == :white ? "\u265A".encode("utf-8") : "\u2654".encode("utf-8")
         end
         print " "
       end
@@ -63,9 +65,15 @@ class Chess
     possible = []
     grid.each do |row|
       row.each do |cell|
-        if cell.color == color
-          cell.possible_moves.each do |move|
-            possible << move
+        if cell.color == color && cell.piece != :king
+          if cell.piece == :pawn
+            cell.check_attacking_positions.each do |move|
+              possible << move
+            end
+          else
+            cell.possible_moves.each do |move|
+              possible << move
+            end
           end
         end
       end
@@ -106,6 +114,11 @@ class Chess
         @grid[position[0]][position[1]] = King.new piece[:color], position, self
       end
     end 
+  end
+
+  private 
+  
+  def pawn_checker position
   end
 end
 

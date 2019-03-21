@@ -65,6 +65,31 @@ class Pawn
     possible
   end
 
+  def check_attacking_positions
+    possible = []
+    if color == :white
+      if !check_edges[:left]
+
+        possible << [@position[0]+1, @position[1] - 1]  
+      end
+      if !check_edges[:right] 
+
+        possible << [@position[0]+1, @position[1] + 1]
+      end
+    else
+      if !check_edges[:left] 
+
+        possible << [@position[0]-1, @position[1] - 1]
+      end
+      if !check_edges[:right] 
+
+        possible << [@position[0]-1, @position[1] + 1]
+      end
+    end
+    
+    possible
+  end
+
   private
   def check_edges
     edges = {top: false, right: false, bottom: false, left: false}
@@ -237,7 +262,7 @@ class Queen
   attr_accessor :piece, :color, :position, :grid, :parent
 
   def initialize color, position, parent=nil
-    @piece = :bishop
+    @piece = :queen
     @color = color
     @position = position
     @parent = parent
@@ -343,7 +368,7 @@ class King
   attr_accessor :piece, :color, :position, :grid, :parent
 
   def initialize color, position, parent=nil
-    @piece = :bishop
+    @piece = :king
     @color = color
     @position = position
     @parent = parent
@@ -366,10 +391,17 @@ class King
 
   private
 
-  def check_cell x,y
-    return false if @position[0] + y > 7 || @position[0] + y < 0 ||
-                    @position[1] + x > 7 || @position[1] + x < 0
-                    
+  def check_cell y,x
+    position_y = @position[0] + y
+    position_x = @position[1] + x
+
+    return false if position_y > 7 || position_y < 0 ||
+                    position_x > 7 || position_x < 0
+
+    return false if @parent.grid[position_y][position_x].color == @color
+
+    return false if @parent.check_all_possible_moves(@color == :white ? :black : :white).include? [position_y, position_x]
+
     return true
   end
 end

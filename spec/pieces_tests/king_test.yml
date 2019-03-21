@@ -204,16 +204,16 @@
   - 5
   - 0
   :color: 
-- :piece: :empty
+- :piece: :king
   :position:
   - 5
   - 1
-  :color: 
-- :piece: :empty
+  :color: :white
+- :piece: :pawn
   :position:
   - 5
   - 2
-  :color: 
+  :color: :black
 - :piece: :empty
   :position:
   - 5
@@ -254,11 +254,11 @@
   - 6
   - 2
   :color: 
-- :piece: :empty
+- :piece: :bishop
   :position:
   - 6
   - 3
-  :color: 
+  :color: :white
 - :piece: :empty
   :position:
   - 6
@@ -274,11 +274,11 @@
   - 6
   - 6
   :color: 
-- :piece: :empty
+- :piece: :pawn
   :position:
   - 6
   - 7
-  :color: 
+  :color: :black
 - :piece: :empty
   :position:
   - 7
@@ -294,11 +294,11 @@
   - 7
   - 2
   :color: 
-- :piece: :empty
+- :piece: :king
   :position:
   - 7
   - 3
-  :color: 
+  :color: :black
 - :piece: :empty
   :position:
   - 7
@@ -309,13 +309,13 @@
   - 7
   - 5
   :color: 
-- :piece: :empty
+- :piece: :pawn
   :position:
   - 7
   - 6
-  :color: 
-- :piece: :empty
+  :color: :white
+- :piece: :king
   :position:
   - 7
   - 7
-  :color: 
+  :color: :black

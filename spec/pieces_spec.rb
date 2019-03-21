@@ -220,5 +220,17 @@ describe King do
     it "Works near the edges" do
       expect(game.grid[0][0].possible_moves).to eql([[1, 0], [1, 1], [0, 1]]) 
     end
+    it "It's blocked by allies" do
+      expect(game.grid[7][7].possible_moves.include? [6,7]).to eql(false) 
+    end
+    it "Isn't blocked by enemies" do
+      expect(game.grid[7][7].possible_moves.include? [7,6]).to eql(true) 
+    end
+    it "Can't move on menaced cells" do
+      expect(game.grid[5][1].possible_moves.include? [4,1]).to eql(false) 
+    end
+    it "Can't move on menaced cells -2" do
+      expect(game.grid[7][3].possible_moves.include? [7,4]).to eql(false) 
+    end
   end
 end
