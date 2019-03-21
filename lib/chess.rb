@@ -21,8 +21,36 @@ class Chess
     @grid = grid
   end
 
-  def default_grid
-    load_grid "default_game.yml"
+  def display_grid
+    
+    display_letter = "H".ord
+    row_separetor = ""
+    25.times{row_separetor += "_"}
+
+    @grid.reverse.each do |row|
+      print " #{row_separetor}\n#{display_letter.chr}"
+
+      row.each do |cell|
+        print "|"
+
+        if cell.is_a? VoidPiece
+          print  " " 
+
+        elsif cell.is_a? Pawn
+          if cell.color == :white
+            print "\u265F".encode("utf-8")
+          else
+            print "\u2659".encode("utf-8")
+          end 
+        
+        end
+        print " "
+      end
+
+      print "|\n"
+      display_letter -= 1
+    end
+    print "  1  2  3  4  5  6  7  8\n"
   end
 
   #functions to save and load grids
@@ -55,7 +83,9 @@ end
 game = Chess.new
 game.load_grid "spec/pieces_spec.yml"
 
+game.display_grid
 
+#puts "\u265F".encode("utf-8")
 
 
 

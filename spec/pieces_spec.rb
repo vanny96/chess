@@ -5,6 +5,7 @@ describe Pawn do
   describe "#possible_moves" do
     game = Chess.new
     game.load_grid "spec/pieces_spec.yml"
+    game.display_grid
 
   #1  
     it "Suggests moves forwards if it's white" do
