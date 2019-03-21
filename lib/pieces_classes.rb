@@ -1,20 +1,23 @@
 #ruby lib/pieces_classes.rb
 class VoidPiece
-  attr_accessor :piece, :position
+  attr_accessor :piece, :position, :color, :parent
 
-  def initialize position
+  def initialize position, parent=nil
     @piece = :empty
+    @color = nil
     @position = position
+    @parent = parent
   end
 end
 
 class Pawn
-  attr_accessor :piece, :color, :position, :grid
+  attr_accessor :piece, :color, :position, :grid, :parent
 
-  def initialize color, position
+  def initialize color, position, parent=nil
     @piece = :pawn
     @color = color
     @position = position
+    @parent = parent
   end
   def possible_moves
     possible = []
