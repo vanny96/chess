@@ -21,20 +21,58 @@ class Pawn
   end
   def possible_moves
     possible = []
+
+    #check possible moves ahead, on the left and then on the right
     if color == :white
-      if (@position[0] >= 0 && @position[0] < 7) &&
-          parent.grid[@position[0]+1][@position[1]].color.nil?
+      
+      unless check_edges[:top]
+        if parent.grid[@position[0]+1][@position[1]].color.nil?
 
-        possible << [@position[0]+1, @position[1]]
+          possible << [@position[0]+1, @position[1]]
+        end
+        if !check_edges[:left] &&
+            parent.grid[@position[0]+1][@position[1] - 1].color == :black
+
+            possible << [@position[0]+1, @position[1] - 1]
+        end
+        if !check_edges[:right] &&
+          parent.grid[@position[0]+1][@position[1] + 1].color == :black
+
+          possible << [@position[0]+1, @position[1] + 1]
+        end
       end
-    else
-      if (@position[0] > 0 && @position[0] <= 7) &&
-        parent.grid[@position[0]-1][@position[1]].color.nil?
 
-        possible << [@position[0]-1, @position[1]]
+    else
+      unless check_edges[:bottom]
+
+        if parent.grid[@position[0]-1][@position[1]].color.nil?
+
+          possible << [@position[0]-1, @position[1]]
+        end
+        if !check_edges[:left] &&
+          parent.grid[@position[0]-1][@position[1] - 1].color == :white
+
+          possible << [@position[0]-1, @position[1] - 1]
+        end
+        if !check_edges[:right] &&
+          parent.grid[@position[0]-1][@position[1] + 1].color == :white
+
+          possible << [@position[0]-1, @position[1] + 1]
+        end
       end
     end
+
     possible
+  end
+
+  private
+  def check_edges
+    edges = {top: false, right: false, bottom: false, left: false}
+    edges[:top] = true if @position[0] == 7
+    edges[:bottom] = true if @position[0] == 0
+    edges[:right] = true if @position[1] == 7
+    edges[:left] = true if @position[1] == 0
+    edges
   end
 end
 

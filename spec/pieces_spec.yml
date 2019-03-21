@@ -4,11 +4,11 @@
   - 0
   - 0
   :color: 
-- :piece: :empty
+- :piece: :pawn
   :position:
   - 0
   - 1
-  :color: 
+  :color: :black
 - :piece: :empty
   :position:
   - 0
@@ -44,11 +44,11 @@
   - 1
   - 0
   :color: :black
-- :piece: :empty
+- :piece: :pawn
   :position:
   - 1
   - 1
-  :color: 
+  :color: :black
 - :piece: :empty
   :position:
   - 1
@@ -264,21 +264,21 @@
   - 6
   - 4
   :color: 
-- :piece: :empty
+- :piece: :pawn
   :position:
   - 6
   - 5
-  :color: 
+  :color: :white
 - :piece: :empty
   :position:
   - 6
   - 6
   :color: 
-- :piece: :empty
+- :piece: :pawn
   :position:
   - 6
   - 7
-  :color: 
+  :color: :white
 - :piece: :empty
   :position:
   - 7
@@ -309,11 +309,11 @@
   - 7
   - 5
   :color: 
-- :piece: :empty
+- :piece: :pawn
   :position:
   - 7
   - 6
-  :color: 
+  :color: :black
 - :piece: :empty
   :position:
   - 7

@@ -61,4 +61,3 @@ game.load_grid "spec/pieces_spec.yml"
 
 
 
-
