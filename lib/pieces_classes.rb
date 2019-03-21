@@ -199,3 +199,36 @@ class Bishop
     possible
   end
 end
+
+class Knight
+  attr_accessor :piece, :color, :position, :grid, :parent
+
+  def initialize color, position, parent=nil
+    @piece = :knight
+    @color = color
+    @position = position
+    @parent = parent
+  end
+
+  def possible_moves
+    possible = []
+    
+    possible << [@position[0]-1, @position[1]-2] if check_cell -1,-2
+    possible << [@position[0]-2, @position[1]-1] if check_cell -2,-1
+    possible << [@position[0]-2, @position[1]+1] if check_cell -2,+1
+    possible << [@position[0]-1, @position[1]+2] if check_cell -1,+2
+    possible << [@position[0]+1, @position[1]+2] if check_cell +1,+2
+    possible << [@position[0]+2, @position[1]+1] if check_cell +2,+1
+    possible << [@position[0]+2, @position[1]-1] if check_cell +2,-1
+    possible << [@position[0]+1, @position[1]-2] if check_cell +1,-2
+    possible
+  end
+
+  private
+
+  def check_cell x,y
+    return @position[0]+x >= 0 && @position[0]+x <= 7 &&
+            @position[1]+y >= 0 && @position[1]+y <= 7 &&
+            @parent.grid[@position[0]+x][@position[1]+y].color != @color
+  end
+end

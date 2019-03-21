@@ -112,6 +112,7 @@ describe Rook do
   end
 end
 
+
 # _________________________
 #H|  |  |  |  |  |  |  |  |
 # _________________________
@@ -131,9 +132,9 @@ end
 # 1  2  3  4  5  6  7  8
 
 describe Bishop do
-  game = Chess.new
-  game.load_grid "spec/pieces_tests/bishop_test.yml"
   describe "#possible_moves" do
+    game = Chess.new
+    game.load_grid "spec/pieces_tests/bishop_test.yml"
   
   #1
     it "Moves in diagonally" do
@@ -147,6 +148,48 @@ describe Bishop do
   #4 
     it "Doesn't suggest to eat an ally" do
       expect(game.grid[4][2].possible_moves.include?([6,4])).to eql(false)
+    end
+  end
+end
+
+#  _________________________
+#H|  |  |  |♖4|  |  |  |♟3|
+# _________________________
+#G|  |  |  |  |  |♘3|  |  |
+# _________________________
+#F|  |  |  |  |  |  |  |  |
+# _________________________
+#E|  |  |  |  |  |  |  |  |
+# _________________________
+#D|  |  |  |♞1|  |  |  |  |
+# _________________________
+#C|  |  |  |  |  |  |  |  |
+# _________________________
+#B|  |♘2|  |  |  |  |  |  |
+# _________________________
+#A|  |  |  |  |  |  |  |  |
+# 1  2  3  4  5  6  7  8
+
+describe Knight do
+  describe "#possible_moves" do
+    game = Chess.new
+    game.load_grid "spec/pieces_tests/knight_test.yml"
+
+  #1
+    it "Moves by L rule if free" do
+      expect(game.grid[3][3].possible_moves).to eql([[2, 1], [1, 2], [1, 4], [2, 5], [4, 5], [5, 4], [5, 2], [4, 1]])  
+    end   
+  #2 
+    it "Doesn't broke near edges" do
+      expect(game.grid[1][1].possible_moves).to eql([[0, 3], [2, 3], [3, 2], [3, 0]])  
+    end
+  #3
+    it "Includes a cell occupied by a piece of another color" do
+      expect(game.grid[6][5].possible_moves.include?([7,7])).to eql(true)
+    end
+  #4
+    it "Doesn't include a cell occupied by a piece of same color" do
+      expect(game.grid[6][5].possible_moves.include?([7,3])).to eql(false)
     end
   end
 end

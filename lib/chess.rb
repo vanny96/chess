@@ -44,7 +44,9 @@ class Chess
            
         elsif cell.is_a? Bishop
           print cell.color == :white ? "\u265D".encode("utf-8") : "\u2657".encode("utf-8")
-          
+        
+        elsif cell.is_a? Knight
+          print cell.color == :white ? "\u265E".encode("utf-8") : "\u2658".encode("utf-8")
         end
         print " "
       end
@@ -80,14 +82,17 @@ class Chess
         @grid[position[0]][position[1]] = Rook.new piece[:color], position, self
       elsif piece[:piece] == :bishop
         @grid[position[0]][position[1]] = Bishop.new piece[:color], position, self
+      elsif piece[:piece] == :knight
+        @grid[position[0]][position[1]] = Knight.new piece[:color], position, self
       end
     end 
   end
 end
 
 game = Chess.new
-game.load_grid "spec/pieces_tests/bishop_test.yml"
+game.load_grid "spec/pieces_tests/knight_test.yml"
 
+game.display_grid
 
 
 
