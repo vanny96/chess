@@ -193,3 +193,32 @@ describe Knight do
     end
   end
 end
+
+describe Queen do
+  describe "#possible_moves" do
+  game = Chess.new
+  game.load_grid "spec/pieces_tests/queen_test.yml"
+    it "Moves like a rook and a bishop" do
+      expect(game.grid[2][2].possible_moves).to eql([[1,1],[0,0],[1,3],[0,4],[3,1],[4,0], #bishop-like
+                                                      [3,3],[4,4],[5,5],[6,6],[7,7], 
+                                                      [1,2],[0,2],[3,2],[4,2],[5,2],[6,2],[7,2], #rook-like
+                                                      [2,1],[2,0],[2,3],[2,4],[2,5],[2,6],[2,7]])  
+    end
+  end 
+end
+
+
+
+describe King do
+  describe "#possible_moves" do
+    game = Chess.new
+    game.load_grid "spec/pieces_tests/king_test.yml"
+    it "Can move in all directions if free" do
+      expect(game.grid[1][3].possible_moves).to eql([[2, 3], [2, 4], [1, 4], [0, 4], 
+                                                      [0, 3], [0, 2], [1, 2], [2, 2]])  
+    end
+    it "Works near the edges" do
+      expect(game.grid[0][0].possible_moves).to eql([[1, 0], [1, 1], [0, 1]]) 
+    end
+  end
+end

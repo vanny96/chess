@@ -232,3 +232,144 @@ class Knight
             @parent.grid[@position[0]+x][@position[1]+y].color != @color
   end
 end
+
+class Queen
+  attr_accessor :piece, :color, :position, :grid, :parent
+
+  def initialize color, position, parent=nil
+    @piece = :bishop
+    @color = color
+    @position = position
+    @parent = parent
+  end
+
+  def possible_moves
+    possible = []
+    possible_position = @position
+
+    while possible_position[0] > 0 && possible_position[1] > 0
+      possible_position = [possible_position[0] -1, possible_position[1] - 1]
+      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = @position
+
+    while possible_position[0] > 0 && possible_position[1] < 7
+      possible_position = [possible_position[0] -1, possible_position[1] + 1]
+      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = @position
+
+    while possible_position[0] < 7 && possible_position[1] > 0
+      possible_position = [possible_position[0] + 1, possible_position[1] - 1]
+      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = @position
+
+    while possible_position[0] < 7 && possible_position[1] < 7 
+      possible_position = [possible_position[0] + 1, possible_position[1] + 1]
+      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = @position
+
+    while possible_position[0] > 0
+      possible_position = [possible_position[0] -1, possible_position[1]]
+      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = @position
+
+    while possible_position[0] < 7
+      possible_position = [possible_position[0] +1, possible_position[1]]
+      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = @position
+
+    while possible_position[1] > 0
+      possible_position = [possible_position[0], possible_position[1] - 1]
+      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = @position
+
+    while possible_position[1] < 7
+      possible_position = [possible_position[0], possible_position[1] + 1]
+      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = @position
+    
+    possible
+  end
+end
+
+class King
+  attr_accessor :piece, :color, :position, :grid, :parent
+
+  def initialize color, position, parent=nil
+    @piece = :bishop
+    @color = color
+    @position = position
+    @parent = parent
+  end
+
+  def possible_moves
+    possible = []
+
+    possible << [@position[0] + 1, @position[1]]      if check_cell 1,0
+    possible << [@position[0] + 1, @position[1] + 1]  if check_cell 1,1
+    possible << [@position[0], @position[1] + 1]      if check_cell 0,1
+    possible << [@position[0] - 1, @position[1] + 1]  if check_cell -1,1
+    possible << [@position[0] - 1, @position[1]]      if check_cell -1,0
+    possible << [@position[0] - 1, @position[1] - 1]  if check_cell -1,-1
+    possible << [@position[0], @position[1] - 1]      if check_cell 0,-1
+    possible << [@position[0] + 1, @position[1] - 1]  if check_cell 1,-1
+
+    possible
+  end
+
+  private
+
+  def check_cell x,y
+    return false if @position[0] + y > 7 || @position[0] + y < 0 ||
+                    @position[1] + x > 7 || @position[1] + x < 0
+                    
+    return true
+  end
+end

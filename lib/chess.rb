@@ -47,6 +47,8 @@ class Chess
         
         elsif cell.is_a? Knight
           print cell.color == :white ? "\u265E".encode("utf-8") : "\u2658".encode("utf-8")
+        elsif cell.is_a? Queen
+          print cell.color == :white ? "\u265B".encode("utf-8") : "\u2655".encode("utf-8")
         end
         print " "
       end
@@ -55,6 +57,20 @@ class Chess
       display_letter -= 1
     end
     print "  1  2  3  4  5  6  7  8\n"
+  end
+
+  def check_all_possible_moves color
+    possible = []
+    grid.each do |row|
+      row.each do |cell|
+        if cell.color == color
+          cell.possible_moves.each do |move|
+            possible << move
+          end
+        end
+      end
+    end
+    possible.uniq
   end
 
   #functions to save and load grids
@@ -84,15 +100,18 @@ class Chess
         @grid[position[0]][position[1]] = Bishop.new piece[:color], position, self
       elsif piece[:piece] == :knight
         @grid[position[0]][position[1]] = Knight.new piece[:color], position, self
+      elsif piece[:piece] == :queen
+        @grid[position[0]][position[1]] = Queen.new piece[:color], position, self
+      elsif piece[:piece] == :king
+        @grid[position[0]][position[1]] = King.new piece[:color], position, self
       end
     end 
   end
 end
 
 game = Chess.new
-game.load_grid "spec/pieces_tests/knight_test.yml"
+game.load_grid "spec/pieces_tests/king_test.yml"
 
-game.display_grid
 
 
 
