@@ -42,7 +42,12 @@ class Chess
           else
             print "\u2659".encode("utf-8")
           end 
-        
+        elsif cell.is_a? Rook
+          if cell.color == :white
+            print "\u265C".encode("utf-8")
+          else
+            print "\u2656".encode("utf-8")
+          end
         end
         print " "
       end
