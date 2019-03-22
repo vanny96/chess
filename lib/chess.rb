@@ -23,6 +23,7 @@ class Chess
 
     loop do
 
+      #Here the white player starts his turn
       move_piece :white, white_in_check
 
       if check_if_check :white
@@ -40,7 +41,7 @@ class Chess
 
       white_in_check = false
 
-
+      #Here the black player starts his turn
       move_piece :black, black_in_check
 
       if check_if_check :black
@@ -60,18 +61,6 @@ class Chess
     end
   end
 
-  def empty_grid
-    grid = []
-    for i in 0..7
-      row = []
-      for j in 0..7
-        row << VoidPiece.new([i,j], self)
-      end
-      grid << row
-    end
-    @grid = grid
-  end
-
 
   def move_piece color, in_check = false
     if in_check
@@ -80,18 +69,13 @@ class Chess
         king = find_king color
         piece = @grid[king[0]][king[1]]
 
-        puts "Your possible moves are:"
-        piece.possible_moves.each do |move|
-          print "#{array_to_table(move).join('-')}\n"
-        end
+        print_possible_moves piece
 
         puts "Where do you want to go? (ex C-1)"
         new_piece = gets.chomp.split('-') 
 
-        unless check_input new_piece
-          puts "Wrong format"
-          next
-        end
+        next unless check_input new_piece
+          
 
         new_piece = table_to_array new_piece
 
@@ -129,10 +113,7 @@ class Chess
           end
         end
 
-        unless check_input piece_position
-          puts "Wrong format"
-          next
-        end
+        next unless check_input piece_position
 
         piece_position = table_to_array piece_position
         piece = @grid[piece_position[0]][piece_position[1]]
@@ -142,18 +123,13 @@ class Chess
           next
         end
 
-        puts "These are your possible moves"
-        piece.possible_moves.each do |move|
-          print "#{array_to_table(move).join('-')}\n"
-        end
+        print_possible_moves piece
 
         puts "Where do you want to go? (ex C-1)"
         new_piece = gets.chomp.split('-') 
 
-        unless check_input new_piece
-          puts "Wrong format"
-          next
-        end
+        next unless check_input new_piece
+          
 
         new_piece = table_to_array new_piece
 
@@ -241,6 +217,7 @@ class Chess
   end
 
   #Functions to save and load grids
+
   def save_grid file_route
     File.open file_route, 'w' do |file|
       save = []
@@ -261,6 +238,8 @@ class Chess
   end
 
 
+  #methods to check status of the game
+
   def check_if_check color
     king = find_king color == :white ? :black : :white
 
@@ -274,24 +253,6 @@ class Chess
     @grid[king[0]][king[1]].possible_moves.empty?
   end
 
-  
-  def create_piece piece, color, position 
-    if piece == :empty
-      @grid[position[0]][position[1]] = VoidPiece.new position, self
-    elsif piece == :pawn
-      @grid[position[0]][position[1]] = Pawn.new color, position, self
-    elsif piece == :rook
-      @grid[position[0]][position[1]] = Rook.new color, position, self
-    elsif piece == :bishop
-      @grid[position[0]][position[1]] = Bishop.new color, position, self
-    elsif piece == :knight
-      @grid[position[0]][position[1]] = Knight.new color, position, self
-    elsif piece == :queen
-      @grid[position[0]][position[1]] = Queen.new color, position, self
-    elsif piece == :king
-      @grid[position[0]][position[1]] = King.new color, position, self
-    end
-  end
 
   def check_promotion color
     pawns = []
@@ -325,14 +286,38 @@ class Chess
     end
   end
 
+
+
+  def create_piece piece, color, position 
+    if piece == :empty
+      @grid[position[0]][position[1]] = VoidPiece.new position, self
+    elsif piece == :pawn
+      @grid[position[0]][position[1]] = Pawn.new color, position, self
+    elsif piece == :rook
+      @grid[position[0]][position[1]] = Rook.new color, position, self
+    elsif piece == :bishop
+      @grid[position[0]][position[1]] = Bishop.new color, position, self
+    elsif piece == :knight
+      @grid[position[0]][position[1]] = Knight.new color, position, self
+    elsif piece == :queen
+      @grid[position[0]][position[1]] = Queen.new color, position, self
+    elsif piece == :king
+      @grid[position[0]][position[1]] = King.new color, position, self
+    end
+  end
+
   private
 
   def check_input input
-    return false if input.length != 2 ||
-                    /[A-H]{1}/.match(input[0]).to_s != input[0] ||
-                    /[1-8]{1}/.match(input[1]).to_s != input[1] 
+   if input.length != 2 || /[A-H]{1}/.match(input[0]).to_s != input[0] ||
+                           /[1-8]{1}/.match(input[1]).to_s != input[1] 
+      puts "Wrong format!"
+      return false
+   else
     return true
+   end
   end
+
   def table_to_array coordinates
     coordinates = [coordinates[0].ord - 65, coordinates[1].to_i - 1]
     coordinates
@@ -342,6 +327,7 @@ class Chess
     coordinates[1] = (coordinates[1] + 1)
     coordinates
   end
+
   def find_king color 
 
     king = [10,10]
@@ -354,12 +340,26 @@ class Chess
 
     king
   end
+
+  def empty_grid
+    grid = []
+    for i in 0..7
+      row = []
+      for j in 0..7
+        row << VoidPiece.new([i,j], self)
+      end
+      grid << row
+    end
+    @grid = grid
+  end
   
+  def print_possible_moves piece
+    puts "Your possible moves are:"
+    piece.possible_moves.each do |move|
+      print "#{array_to_table(move).join('-')}\n"
+    end
+  end
 end
-
-
-
-
 
 
 
