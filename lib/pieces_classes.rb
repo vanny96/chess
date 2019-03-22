@@ -29,7 +29,13 @@ class Pawn
         if @parent.grid[@position[0]+1][@position[1]].color.nil?
 
           possible << [@position[0]+1, @position[1]]
+          if position[0] == 1 &&
+            @parent.grid[@position[0]+2][@position[1]].color.nil?
+
+            possible << [@position[0]+2, @position[1]]
+          end
         end
+        
         if !check_edges[:left] &&
             @parent.grid[@position[0]+1][@position[1] - 1].color == :black
 
@@ -48,7 +54,15 @@ class Pawn
         if @parent.grid[@position[0]-1][@position[1]].color.nil?
 
           possible << [@position[0]-1, @position[1]]
+
+          if position[0] == 6 && 
+             @parent.grid[@position[0]-2][@position[1]].color.nil?
+            
+
+            possible << [@position[0]-2, @position[1]]
+          end
         end
+        
         if !check_edges[:left] &&
           @parent.grid[@position[0]-1][@position[1] - 1].color == :white
 

@@ -203,9 +203,7 @@ end
 
 game = Chess.new
 game.new_game
-game.display_grid
 
-game.move_piece :white
 
 
 
