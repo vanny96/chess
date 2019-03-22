@@ -17,6 +17,10 @@ class Chess
     display_grid
     white_in_check = false
     black_in_check = false
+
+    puts "If you want to load a previous game, type 'load' during the move selection"
+    puts "If you want to save the game, type 'save' during the move selection"
+
     loop do
 
       move_piece :white, white_in_check
@@ -98,6 +102,24 @@ class Chess
       loop do
         puts "#{color.to_s.capitalize}, what piece do you want to move? (ex A-2)"
         piece_position = gets.chomp.split('-') 
+
+        if piece_position == ["save"]
+          save_grid "save/saved_game.yml"
+          puts "Game saved!"
+          next
+        end
+
+        if piece_position == ["load"]
+          if File.exist? "save/saved_game.yml"
+            load_grid "save/saved_game.yml"
+            display_grid
+            puts "Game loaded!"
+            next
+          else
+            puts "No file to load"
+            next
+          end
+        end
 
         unless check_input piece_position
           puts "Wrong format"
@@ -211,8 +233,8 @@ class Chess
   end
 
   #Functions to save and load grids
-  def save_grid
-    File.open 'default_game.yml', 'w' do |file|
+  def save_grid file_route
+    File.open file_route, 'w' do |file|
       save = []
       @grid.each do |row|
         row.each do |cell|
