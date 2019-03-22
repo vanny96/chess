@@ -9,6 +9,10 @@ class Chess
     empty_grid
   end
 
+  def new_game
+    load_grid "lib/new_game.yml"
+  end
+
   def empty_grid
     grid = []
     for i in 0..7
@@ -19,6 +23,14 @@ class Chess
       grid << row
     end
     @grid = grid
+  end
+
+  def move_piece color
+    loop do
+      puts "What piece do you want to move? (ex A-2)"
+      new_position = gets.chomp.split('-')
+      print new_position      
+    end
   end
 
   def display_grid
@@ -40,7 +52,7 @@ class Chess
           print cell.color == :white ?  "\u265F".encode("utf-8") : "\u2659".encode("utf-8")
         
         elsif cell.is_a? Rook
-          print cell.color == :white ? "\u2659".encode("utf-8") : "\u2656".encode("utf-8")
+          print cell.color == :white ? "\u265C".encode("utf-8") : "\u2656".encode("utf-8")
            
         elsif cell.is_a? Bishop
           print cell.color == :white ? "\u265D".encode("utf-8") : "\u2657".encode("utf-8")
@@ -65,15 +77,19 @@ class Chess
     possible = []
     grid.each do |row|
       row.each do |cell|
+
         if cell.color == color
+
           if cell.piece == :pawn
             cell.check_attacking_positions.each do |move|
               possible << move
             end
+
           elsif cell.piece == :king
             cell.possible_moves(true).each do |move|
               possible << move
             end
+
           else
             cell.possible_moves.each do |move|
               possible << move
@@ -127,7 +143,7 @@ class Chess
 end
 
 game = Chess.new
-game.load_grid "spec/pieces_tests/king_test.yml"
+game.new_game
 
 game.display_grid
 
