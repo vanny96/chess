@@ -294,9 +294,7 @@ class Chess
   end
 end
 
-game = Chess.new
-game.new_game
-game.play_game
+
 
 
 
