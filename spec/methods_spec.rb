@@ -40,4 +40,25 @@ describe Chess do
     end    
   end
   
+  describe "#check_promotion" do
+
+    it "Return the pawn position if it is on promotion line" do
+      game = Chess.new
+      game.create_piece :pawn, :white, [7,7]
+
+      expect(game.check_promotion :white).to eql([[7,7]])  
+    end
+    it "Works with black pieces" do
+      game = Chess.new
+      game.create_piece :pawn, :black, [0,0]
+
+      expect(game.check_promotion :black).to eql([[0,0]])  
+    end
+    it "Only works with pawns" do
+      game = Chess.new
+      game.create_piece :bishop, :black, [0,0]
+
+      expect(game.check_promotion :black).to eql([])  
+    end
+  end
 end

@@ -34,6 +34,10 @@ class Chess
         black_in_check = true
       end
 
+      if check_promotion(:white).length == 1
+        promote check_promotion(:white)[0], :white
+      end
+
       white_in_check = false
 
 
@@ -46,6 +50,10 @@ class Chess
         end
 
         white_in_check = true
+      end
+
+      if check_promotion(:black).length == 1
+        promote check_promotion(:black)[0], :black
       end
 
       black_in_check = false
@@ -285,6 +293,38 @@ class Chess
     end
   end
 
+  def check_promotion color
+    pawns = []
+    if color == :white
+      pawn = @grid[7].find{|cell| cell.color == color && cell.piece == :pawn}
+      pawns << pawn.position unless pawn.nil?
+    else
+      pawn = @grid[0].find{|cell| cell.color == color && cell.piece == :pawn}
+      pawns << pawn.position unless pawn.nil?
+    end
+    pawns
+  end
+
+  def promote position, color
+    loop do
+      puts "Your pawn has been promoted! What would you like to turn it into? (ex queen)"
+      new_piece = gets.chomp.downcase.to_sym
+
+      if new_piece != :queen &&
+         new_piece != :horse &&
+         new_piece != :tower &&
+         new_piece != :bishop
+
+         puts "Enter a valid piece (queen, tower, bishop, horse)"
+         next
+      end
+
+      create_piece new_piece, color, position
+      display_grid
+      break
+    end
+  end
+
   private
 
   def check_input input
@@ -314,9 +354,8 @@ class Chess
 
     king
   end
+  
 end
-
-
 
 
 
