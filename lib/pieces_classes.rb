@@ -406,8 +406,6 @@ class King
 
     return false if @parent.grid[position_y][position_x].color == @color
 
-    
-
     return true
   end
 end
