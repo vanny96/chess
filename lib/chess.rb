@@ -13,6 +13,41 @@ class Chess
     load_grid "lib/new_game.yml"
   end
 
+  def play_game
+    display_grid
+    white_in_check = false
+    black_in_check = false
+    loop do
+
+      move_piece :white, white_in_check
+
+      if check_if_check :white
+        if check_if_mate :white
+          puts "White wins!"
+          break
+        end
+        puts "called"
+        black_in_check = true
+      end
+
+      white_in_check = false
+
+
+      move_piece :black, black_in_check
+
+      if check_if_check :black
+        if check_if_mate :black
+          puts "Black wins!"
+          break
+        end
+
+        white_in_check = true
+      end
+
+      black_in_check = false
+    end
+  end
+
   def empty_grid
     grid = []
     for i in 0..7
@@ -26,49 +61,83 @@ class Chess
   end
 
 
-  def move_piece color
-    loop do
-      puts "What piece do you want to move? (ex A-2)"
-      piece_position = gets.chomp.split('-') 
+  def move_piece color, in_check = false
+    if in_check
+      loop do
+        puts "You are under check! Move your king"
+        king = find_king color
+        piece = @grid[king[0]][king[1]]
 
-      unless check_input piece_position
-        puts "Wrong format"
-        next
-      end
+        puts "Your possible moves are:"
+        piece.possible_moves.each do |move|
+          print "#{array_to_table(move).join('-')}\n"
+        end
 
-      piece_position = table_to_array piece_position
-      piece = @grid[piece_position[0]][piece_position[1]]
+        puts "Where do you want to go? (ex C-1)"
+        new_piece = gets.chomp.split('-') 
 
-      if piece.color != color
-        puts "This is not a piece of yours!"
-        next
-      end
+        unless check_input new_piece
+          puts "Wrong format"
+          next
+        end
 
-      puts "This are your possible moves"
-      piece.possible_moves.each do |move|
-        print "#{array_to_table(move)}\n"
-      end
+        new_piece = table_to_array new_piece
 
-      puts "Where do you want to go? (ex C-1)"
-      new_piece = gets.chomp.split('-') 
+        unless piece.possible_moves.include? new_piece
+          puts "It's not a possible move"
+          next
+        end
 
-      unless check_input new_piece
-        puts "Wrong format"
-        next
-      end
-
-      new_piece = table_to_array new_piece
-
-      unless piece.possible_moves.include? new_piece
-        puts "It's not a possible moves"
-        next
-      end
-
-      create_piece piece.piece, piece.color, new_piece
-      create_piece :empty, nil, piece_position
+        create_piece piece.piece, piece.color, new_piece
+        create_piece :empty, nil, king
   
-      display_grid
-      break      
+        display_grid
+        break
+      end
+    else
+      loop do
+        puts "#{color.to_s.capitalize}, what piece do you want to move? (ex A-2)"
+        piece_position = gets.chomp.split('-') 
+
+        unless check_input piece_position
+          puts "Wrong format"
+          next
+        end
+
+        piece_position = table_to_array piece_position
+        piece = @grid[piece_position[0]][piece_position[1]]
+
+        if piece.color != color
+          puts "This is not a piece of yours!"
+          next
+        end
+
+        puts "These are your possible moves"
+        piece.possible_moves.each do |move|
+          print "#{array_to_table(move).join('-')}\n"
+        end
+
+        puts "Where do you want to go? (ex C-1)"
+        new_piece = gets.chomp.split('-') 
+
+        unless check_input new_piece
+          puts "Wrong format"
+          next
+        end
+
+        new_piece = table_to_array new_piece
+
+        unless piece.possible_moves.include? new_piece
+          puts "It's not a possible move"
+          next
+        end
+
+        create_piece piece.piece, piece.color, new_piece
+        create_piece :empty, nil, piece_position
+  
+        display_grid
+        break      
+      end
     end
   end
 
@@ -161,6 +230,21 @@ class Chess
     end 
   end
 
+
+  def check_if_check color
+    king = find_king color == :white ? :black : :white
+
+    check_all_possible_moves(color).include? king
+  end
+
+  def check_if_mate color
+    king = find_king color == :white ? :black : :white
+
+    
+    @grid[king[0]][king[1]].possible_moves.empty?
+  end
+
+  
   def create_piece piece, color, position 
     if piece == :empty
       @grid[position[0]][position[1]] = VoidPiece.new position, self
@@ -179,10 +263,7 @@ class Chess
     end
   end
 
-
-  private 
-
-  
+  private
 
   def check_input input
     return false if input.length != 2 ||
@@ -199,10 +280,23 @@ class Chess
     coordinates[1] = (coordinates[1] + 1)
     coordinates
   end
+  def find_king color 
+
+    king = [10,10]
+
+    @grid.each do |row|
+      row.each do |cell|
+        king = cell.position if cell.piece == :king && cell.color == color
+      end
+    end
+
+    king
+  end
 end
 
 game = Chess.new
 game.new_game
+game.play_game
 
 
 
