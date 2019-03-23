@@ -1,4 +1,119 @@
 #ruby lib/pieces_classes.rb
+
+module FreeMovement
+  def vertical_moves position, parent, color
+    possible = []
+    possible_position = position
+
+    while possible_position[0] > 0
+      possible_position = [possible_position[0] -1, possible_position[1]]
+      grid_element = parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = position
+
+    while possible_position[0] < 7
+      possible_position = [possible_position[0] +1, possible_position[1]]
+      grid_element = parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+
+    possible
+  end
+
+  def horizontal_moves position, parent, color
+    possible = []
+    possible_position = position
+
+    while possible_position[1] > 0
+      possible_position = [possible_position[0], possible_position[1] - 1]
+      grid_element = parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = position
+
+    while possible_position[1] < 7
+      possible_position = [possible_position[0], possible_position[1] + 1]
+      grid_element = parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    
+    possible
+  end
+
+  def moves_diagonally_right position, parent, color
+    possible = []
+    possible_position = position
+
+    while possible_position[0] > 0 && possible_position[1] > 0
+      possible_position = [possible_position[0] -1, possible_position[1] - 1]
+      grid_element = parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = position
+
+    while possible_position[0] > 0 && possible_position[1] < 7
+      possible_position = [possible_position[0] -1, possible_position[1] + 1]
+      grid_element = parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+
+    possible
+  end 
+
+  def moves_diagonally_left position, parent, color
+    possible = []
+    possible_position = position
+
+    while possible_position[0] < 7 && possible_position[1] > 0
+      possible_position = [possible_position[0] + 1, possible_position[1] - 1]
+      grid_element = parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == @color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+    possible_position = position
+
+    while possible_position[0] < 7 && possible_position[1] < 7 
+      possible_position = [possible_position[0] + 1, possible_position[1] + 1]
+      grid_element = parent.grid[possible_position[0]][possible_position[1]]
+      
+      break if grid_element.color == color
+      possible << possible_position
+
+      break unless grid_element.color.nil?
+    end
+
+    possible
+  end
+end
+
 class VoidPiece
   attr_accessor :piece, :position, :color, :parent
 
@@ -117,6 +232,8 @@ end
 
 
 class Rook
+  include FreeMovement
+
   attr_accessor :piece, :color, :position, :grid, :parent
 
   def initialize color, position, parent=nil
@@ -126,58 +243,24 @@ class Rook
     @parent = parent
   end
   def possible_moves
+
     possible = []
-    possible_position = @position
 
-    while possible_position[0] > 0
-      possible_position = [possible_position[0] -1, possible_position[1]]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
+    vertical_moves(@position, @parent, @color).each do |move|
+      possible << move
     end
-    possible_position = @position
 
-    while possible_position[0] < 7
-      possible_position = [possible_position[0] +1, possible_position[1]]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
+    horizontal_moves(@position, @parent, @color).each do |move|
+      possible << move
     end
-    possible_position = @position
 
-    while possible_position[1] > 0
-      possible_position = [possible_position[0], possible_position[1] - 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
-    end
-    possible_position = @position
-
-    while possible_position[1] < 7
-      possible_position = [possible_position[0], possible_position[1] + 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
-    end
-    possible_position = @position
-    
     possible
   end
 end
 
 class Bishop
+  include FreeMovement
+
   attr_accessor :piece, :color, :position, :grid, :parent
 
   def initialize color, position, parent=nil
@@ -189,51 +272,14 @@ class Bishop
 
   def possible_moves
     possible = []
-    possible_position = @position
 
-    while possible_position[0] > 0 && possible_position[1] > 0
-      possible_position = [possible_position[0] -1, possible_position[1] - 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
+    moves_diagonally_right(@position, @parent, @color).each do |move|
+      possible << move
     end
-    possible_position = @position
 
-    while possible_position[0] > 0 && possible_position[1] < 7
-      possible_position = [possible_position[0] -1, possible_position[1] + 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
+    moves_diagonally_left(@position, @parent, @color).each do |move|
+      possible << move
     end
-    possible_position = @position
-
-    while possible_position[0] < 7 && possible_position[1] > 0
-      possible_position = [possible_position[0] + 1, possible_position[1] - 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
-    end
-    possible_position = @position
-
-    while possible_position[0] < 7 && possible_position[1] < 7 
-      possible_position = [possible_position[0] + 1, possible_position[1] + 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
-    end
-    possible_position = @position
     
     possible
   end
@@ -273,6 +319,8 @@ class Knight
 end
 
 class Queen
+  include FreeMovement
+
   attr_accessor :piece, :color, :position, :grid, :parent
 
   def initialize color, position, parent=nil
@@ -286,93 +334,21 @@ class Queen
     possible = []
     possible_position = @position
 
-    while possible_position[0] > 0 && possible_position[1] > 0
-      possible_position = [possible_position[0] -1, possible_position[1] - 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
+    moves_diagonally_right(@position, @parent, @color).each do |move|
+      possible << move
     end
-    possible_position = @position
 
-    while possible_position[0] > 0 && possible_position[1] < 7
-      possible_position = [possible_position[0] -1, possible_position[1] + 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
+    moves_diagonally_left(@position, @parent, @color).each do |move|
+      possible << move
     end
-    possible_position = @position
 
-    while possible_position[0] < 7 && possible_position[1] > 0
-      possible_position = [possible_position[0] + 1, possible_position[1] - 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
+    vertical_moves(@position, @parent, @color).each do |move|
+      possible << move
     end
-    possible_position = @position
 
-    while possible_position[0] < 7 && possible_position[1] < 7 
-      possible_position = [possible_position[0] + 1, possible_position[1] + 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
+    horizontal_moves(@position, @parent, @color).each do |move|
+      possible << move
     end
-    possible_position = @position
-
-    while possible_position[0] > 0
-      possible_position = [possible_position[0] -1, possible_position[1]]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
-    end
-    possible_position = @position
-
-    while possible_position[0] < 7
-      possible_position = [possible_position[0] +1, possible_position[1]]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
-    end
-    possible_position = @position
-
-    while possible_position[1] > 0
-      possible_position = [possible_position[0], possible_position[1] - 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
-    end
-    possible_position = @position
-
-    while possible_position[1] < 7
-      possible_position = [possible_position[0], possible_position[1] + 1]
-      grid_element = @parent.grid[possible_position[0]][possible_position[1]]
-      
-      break if grid_element.color == @color
-      possible << possible_position
-
-      break unless grid_element.color.nil?
-    end
-    possible_position = @position
     
     possible
   end

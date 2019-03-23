@@ -7,6 +7,7 @@ class Chess
 
   def initialize
     empty_grid
+    new_game
   end
 
   def new_game
@@ -360,6 +361,5 @@ class Chess
     end
   end
 end
-
 
 
