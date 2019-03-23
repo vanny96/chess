@@ -12,49 +12,32 @@ class Chess
 
   def play_game
     display_grid
-    white_in_check = false
-    black_in_check = false
+    check = false
+
+    color = :white
 
     puts "If you want to load a previous game, type 'load' during the move selection"
     puts "If you want to save the game, type 'save' during the move selection"
 
     loop do
+      move_piece color, check
 
-      #Here the white player starts his turn
-      move_piece :white, white_in_check
-
-      if check_if_check :white
-        if check_if_mate :white
-          puts "White wins!"
+      if check_if_check color
+        if check_if_mate color
+          puts "#{color.to_s.capitalize} wins!"
           break
         end
         puts "called"
-        black_in_check = true
+        check = true
       end
 
-      if check_promotion(:white).length == 1
-        promote check_promotion(:white)[0], :white
+      if check_promotion(color).length == 1
+        promote check_promotion(color)[0], color
       end
 
-      white_in_check = false
+      check = false
 
-      #Here the black player starts his turn
-      move_piece :black, black_in_check
-
-      if check_if_check :black
-        if check_if_mate :black
-          puts "Black wins!"
-          break
-        end
-
-        white_in_check = true
-      end
-
-      if check_promotion(:black).length == 1
-        promote check_promotion(:black)[0], :black
-      end
-
-      black_in_check = false
+      color = color == :white ? :black : :white
     end
   end
 
