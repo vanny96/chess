@@ -392,9 +392,8 @@ class King
     position_x = @position[1] + x
 
     return false if position_y > 7 || position_y < 0 ||
-                    position_x > 7 || position_x < 0
-
-    return false if @parent.grid[position_y][position_x].color == @color
+                    position_x > 7 || position_x < 0 ||
+                    @parent.grid[position_y][position_x].color == @color
 
     return true
   end
