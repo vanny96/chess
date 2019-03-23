@@ -7,11 +7,7 @@ class Chess
 
   def initialize
     empty_grid
-    new_game
-  end
-
-  def new_game
-    load_grid "lib/new_game.yml"
+    load_grid "save/new_game.yml"
   end
 
   def play_game
