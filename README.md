@@ -6,3 +6,6 @@ Anyway I know that the code could be improved massively in terms of algorithms, 
 
 To play it, run 'ruby play_game.rb' in the command line while in the directory, once you've done this the game will tell you what to do in order to move pieces around
 
+Features to add: 
+-En passant
+-Castling
