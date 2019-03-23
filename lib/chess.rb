@@ -157,24 +157,21 @@ class Chess
       row.each do |cell|
         print "|"
 
-        if cell.is_a? VoidPiece
-          print  " " 
-
-        elsif cell.is_a? Pawn
-          print cell.color == :white ?  "\u265F".encode("utf-8") : "\u2659".encode("utf-8")
-        
-        elsif cell.is_a? Rook
-          print cell.color == :white ? "\u265C".encode("utf-8") : "\u2656".encode("utf-8")
-           
-        elsif cell.is_a? Bishop
-          print cell.color == :white ? "\u265D".encode("utf-8") : "\u2657".encode("utf-8")
-        
-        elsif cell.is_a? Knight
-          print cell.color == :white ? "\u265E".encode("utf-8") : "\u2658".encode("utf-8")
-        elsif cell.is_a? Queen
-          print cell.color == :white ? "\u265B".encode("utf-8") : "\u2655".encode("utf-8")
-        elsif cell.is_a? King
-          print cell.color == :white ? "\u265A".encode("utf-8") : "\u2654".encode("utf-8")
+        case cell.piece
+          when :empty
+            print  " "
+          when :pawn
+            print cell.color == :white ?  "\u265F".encode("utf-8") : "\u2659".encode("utf-8")
+          when :rook
+            print cell.color == :white ? "\u265C".encode("utf-8") : "\u2656".encode("utf-8")
+          when :bishop
+            print cell.color == :white ? "\u265D".encode("utf-8") : "\u2657".encode("utf-8")
+          when :knight
+            print cell.color == :white ? "\u265E".encode("utf-8") : "\u2658".encode("utf-8")
+          when :queen
+            print cell.color == :white ? "\u265B".encode("utf-8") : "\u2655".encode("utf-8")
+          when :king
+            print cell.color == :white ? "\u265A".encode("utf-8") : "\u2654".encode("utf-8")
         end
         print " "
       end
@@ -286,20 +283,21 @@ class Chess
 
 
   def create_piece piece, color, position 
-    if piece == :empty
-      @grid[position[0]][position[1]] = VoidPiece.new position, self
-    elsif piece == :pawn
-      @grid[position[0]][position[1]] = Pawn.new color, position, self
-    elsif piece == :rook
-      @grid[position[0]][position[1]] = Rook.new color, position, self
-    elsif piece == :bishop
-      @grid[position[0]][position[1]] = Bishop.new color, position, self
-    elsif piece == :knight
-      @grid[position[0]][position[1]] = Knight.new color, position, self
-    elsif piece == :queen
-      @grid[position[0]][position[1]] = Queen.new color, position, self
-    elsif piece == :king
-      @grid[position[0]][position[1]] = King.new color, position, self
+    case piece
+      when :empty
+        @grid[position[0]][position[1]] = VoidPiece.new position, self
+      when :pawn
+        @grid[position[0]][position[1]] = Pawn.new color, position, self
+      when :rook
+        @grid[position[0]][position[1]] = Rook.new color, position, self
+      when :bishop
+        @grid[position[0]][position[1]] = Bishop.new color, position, self
+      when :knight
+        @grid[position[0]][position[1]] = Knight.new color, position, self
+      when :queen
+        @grid[position[0]][position[1]] = Queen.new color, position, self
+      when :king
+        @grid[position[0]][position[1]] = King.new color, position, self
     end
   end
 
