@@ -35,10 +35,6 @@ class Chess
     @check = false
 
     if check_if_check
-      if check_if_mate 
-        puts "#{@color.capitalize} wins!"
-        exit
-      end
       @check = true
     end
 
@@ -51,45 +47,42 @@ class Chess
   public
 
   def move_piece 
-    if @check
-      loop do
-        puts "You are under check! Move your king"
-        piece_position = find_king @color
-        piece = @grid[piece_position[0]][piece_position[1]]
+    puts "You are under check! Free your king or you'll be defeated!" if @check
+    
+    loop do
+      puts "#{@color.capitalize}, what piece do you want to move? (ex A-2)"
+      piece_position = gets.chomp.split('-') 
 
+      #Option to save and load games while in your turn
 
-        where_to_move piece_position, piece
-        return
+      if piece_position.length == 1
+        manage_game_save piece_position[0]
+        next
       end
-    else
-      loop do
-        puts "#{@color.capitalize}, what piece do you want to move? (ex A-2)"
-        piece_position = gets.chomp.split('-') 
 
-        #Option to save and load games while in your turn
+      #Actual movement code
 
-        if piece_position.length == 1
-          manage_game_save piece_position[0]
-          next
-        end
+      next unless check_input piece_position
 
-        #Actual movement code
+      piece_position = table_to_array piece_position
+      piece = @grid[piece_position[0]][piece_position[1]]
 
-        next unless check_input piece_position
-
-        piece_position = table_to_array piece_position
-        piece = @grid[piece_position[0]][piece_position[1]]
-
-        if piece.color != @color
-          puts "This is not a piece of yours!"
-          next
-        end
-
-        where_to_move piece_position, piece
-        return
+      if piece.color != @color
+        puts "This is not a piece of yours!"
+        next
       end
+
+      where_to_move piece_position, piece
+      break
+    end
+
+    other_color = @color == :white ? :black : :white
+    if check_if_check other_color
+      puts "#{other_color.capitalize} wins!"
+      exit
     end
   end
+
 
   private
 
@@ -239,10 +232,10 @@ class Chess
 
   #methods to check status of the game
 
-  def check_if_check 
-    king = find_king @color == :white ? :black : :white
+  def check_if_check color = @color
+    king = find_king color == :white ? :black : :white
 
-    check_all_possible_moves(@color).include? king
+    check_all_possible_moves(color).include? king
   end
 
   def check_if_mate 
