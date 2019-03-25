@@ -3,7 +3,7 @@ require 'yaml'
 #ruby lib/chess.rb
 
 class Chess
-  attr_accessor :grid
+  attr_accessor :grid, :color
 
   def initialize
     empty_grid
@@ -12,120 +12,142 @@ class Chess
 
   def play_game
     display_grid
-    check = false
+    @check = false
 
-    color = :white
+    @color = :white
 
     puts "If you want to load a previous game, type 'load' during the move selection"
     puts "If you want to save the game, type 'save' during the move selection"
 
     loop do
-      move_piece color, check
+      
+      play_turn
 
-      if check_if_check color
-        if check_if_mate color
-          puts "#{color.to_s.capitalize} wins!"
-          break
-        end
-        puts "called"
-        check = true
-      end
-
-      if check_promotion(color).length == 1
-        promote check_promotion(color)[0], color
-      end
-
-      check = false
-
-      color = color == :white ? :black : :white
+      @color = @color == :white ? :black : :white
+      
     end
   end
 
 
-  def move_piece color, in_check = false
-    if in_check
+  private
+  def play_turn
+    move_piece 
+    @check = false
+
+    if check_if_check
+      if check_if_mate 
+        puts "#{@color.capitalize} wins!"
+        exit
+      end
+      @check = true
+    end
+
+    if check_promotion.length == 1
+      promote check_promotion[0]
+    end
+  end
+
+
+  public
+
+  def move_piece 
+    if @check
       loop do
         puts "You are under check! Move your king"
-        king = find_king color
-        piece = @grid[king[0]][king[1]]
+        piece_position = find_king @color
+        piece = @grid[piece_position[0]][piece_position[1]]
 
-        print_possible_moves piece
 
-        puts "Where do you want to go? (ex C-1)"
-        new_piece = gets.chomp.split('-') 
-
-        next unless check_input new_piece
-          
-
-        new_piece = table_to_array new_piece
-
-        unless piece.possible_moves.include? new_piece
-          puts "It's not a possible move"
-          next
-        end
-
-        create_piece piece.piece, piece.color, new_piece
-        create_piece :empty, nil, king
-  
-        display_grid
-        break
+        where_to_move piece_position, piece
+        return
       end
     else
       loop do
-        puts "#{color.to_s.capitalize}, what piece do you want to move? (ex A-2)"
+        puts "#{@color.capitalize}, what piece do you want to move? (ex A-2)"
         piece_position = gets.chomp.split('-') 
 
-        if piece_position == ["save"]
-          save_grid "save/saved_game.yml"
-          puts "Game saved!"
+        #Option to save and load games while in your turn
+
+        if piece_position.length == 1
+          manage_game_save piece_position[0]
           next
         end
 
-        if piece_position == ["load"]
-          if File.exist? "save/saved_game.yml"
-            load_grid "save/saved_game.yml"
-            display_grid
-            puts "Game loaded!"
-            next
-          else
-            puts "No file to load"
-            next
-          end
-        end
+        #Actual movement code
 
         next unless check_input piece_position
 
         piece_position = table_to_array piece_position
         piece = @grid[piece_position[0]][piece_position[1]]
 
-        if piece.color != color
+        if piece.color != @color
           puts "This is not a piece of yours!"
           next
         end
 
-        print_possible_moves piece
-
-        puts "Where do you want to go? (ex C-1)"
-        new_piece = gets.chomp.split('-') 
-
-        next unless check_input new_piece
-          
-
-        new_piece = table_to_array new_piece
-
-        unless piece.possible_moves.include? new_piece
-          puts "It's not a possible move"
-          next
-        end
-
-        create_piece piece.piece, piece.color, new_piece
-        create_piece :empty, nil, piece_position
-  
-        display_grid
-        break      
+        where_to_move piece_position, piece
+        return
       end
     end
   end
+
+  private
+
+  def where_to_move piece_position, piece
+
+    loop do
+      print_possible_moves piece
+
+      puts "Type 'back' if you want to chose your piece again"
+      puts "Where do you want to go? (ex C-1)"
+
+      new_piece = gets.chomp.split('-') 
+
+      if new_piece == ['back']
+        move_piece @check 
+        return
+      end
+
+      next unless check_input new_piece
+          
+
+      new_piece = table_to_array new_piece
+
+      unless piece.possible_moves.include? new_piece
+        puts "It's not a possible move"
+        next
+      end
+
+      create_piece piece.piece, piece.color, new_piece
+      create_piece :empty, nil, piece_position
+  
+      display_grid
+      return
+    end
+  end
+
+
+  def manage_game_save comand
+    if comand == "save"
+      save_grid "save/saved_game.yml"
+      puts "Game saved!"
+
+    elsif comand == "load"
+      if File.exist? "save/saved_game.yml"
+        load_grid "save/saved_game.yml"
+        display_grid
+        puts "Game loaded!"
+      else
+        puts "No file to load"
+      end
+
+    else
+      puts "No valid comand"
+    end
+  end
+
+
+  public
 
 
   def display_grid
@@ -217,33 +239,33 @@ class Chess
 
   #methods to check status of the game
 
-  def check_if_check color
-    king = find_king color == :white ? :black : :white
+  def check_if_check 
+    king = find_king @color == :white ? :black : :white
 
-    check_all_possible_moves(color).include? king
+    check_all_possible_moves(@color).include? king
   end
 
-  def check_if_mate color
-    king = find_king color == :white ? :black : :white
+  def check_if_mate 
+    king = find_king @color == :white ? :black : :white
 
     
     @grid[king[0]][king[1]].possible_moves.empty?
   end
 
 
-  def check_promotion color
+  def check_promotion 
     pawns = []
-    if color == :white
-      pawn = @grid[7].find{|cell| cell.color == color && cell.piece == :pawn}
+    if @color == :white
+      pawn = @grid[7].find{|cell| cell.color == @color && cell.piece == :pawn}
       pawns << pawn.position unless pawn.nil?
     else
-      pawn = @grid[0].find{|cell| cell.color == color && cell.piece == :pawn}
+      pawn = @grid[0].find{|cell| cell.color == @color && cell.piece == :pawn}
       pawns << pawn.position unless pawn.nil?
     end
     pawns
   end
 
-  def promote position, color
+  def promote position
     loop do
       puts "Your pawn has been promoted! What would you like to turn it into? (ex queen)"
       new_piece = gets.chomp.downcase.to_sym
@@ -257,7 +279,7 @@ class Chess
          next
       end
 
-      create_piece new_piece, color, position
+      create_piece new_piece, @color, position
       display_grid
       break
     end
@@ -296,15 +318,18 @@ class Chess
    end
   end
 
+
   def table_to_array coordinates
     coordinates = [coordinates[0].ord - 65, coordinates[1].to_i - 1]
     coordinates
   end
+
   def array_to_table coordinates
     coordinates[0] = (coordinates[0] + 65).chr
     coordinates[1] = (coordinates[1] + 1)
     coordinates
   end
+
 
   def find_king color 
 
@@ -331,12 +356,14 @@ class Chess
     @grid = grid
   end
   
+
   def print_possible_moves piece
     puts "Your possible moves are:"
     piece.possible_moves.each do |move|
       print "#{array_to_table(move).join('-')}\n"
     end
   end
+
 end
 
 

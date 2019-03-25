@@ -9,3 +9,6 @@ To play it, run 'ruby play_game.rb' in the command line while in the directory, 
 Features to add: 
 -En passant
 -Castling
+
+Bug to resolve:
+-Discoverd that the checkmate will be called even if another piece could have saved the king

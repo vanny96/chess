@@ -8,16 +8,18 @@ describe Chess do
       game = Chess.new
       game.create_piece :king, :black, [7,5]
       game.create_piece :pawn, :white, [6,4]
+      game.color = :white
 
-      expect(game.check_if_check :white).to eql(true) 
+      expect(game.check_if_check).to eql(true) 
     end
 
     it "Isn't always true" do
       game = Chess.new
       game.create_piece :king, :black, [7,5]
       game.create_piece :pawn, :white, [5,4]
+      game.color = :white
 
-      expect(game.check_if_check :white).to eql(false) 
+      expect(game.check_if_check).to eql(false) 
     end
   end
 
@@ -27,16 +29,18 @@ describe Chess do
       game.create_piece :king, :black, [7,7]
       game.create_piece :queen, :white, [6,6]
       game.create_piece :pawn, :white, [5,5]
+      game.color = :white
 
-      expect(game.check_if_mate :white).to eql(true)
+      expect(game.check_if_mate).to eql(true)
     end    
     it "Doesn't always return true" do
       game = Chess.new
       game.create_piece :king, :black, [7,7]
       game.create_piece :queen, :white, [6,6]
       game.create_piece :pawn, :white, [4,5]
+      game.color = :white
 
-      expect(game.check_if_mate :white).to eql(false)
+      expect(game.check_if_mate).to eql(false)
     end    
   end
   
@@ -44,21 +48,24 @@ describe Chess do
 
     it "Return the pawn position if it is on promotion line" do
       game = Chess.new
+      game.color = :white
       game.create_piece :pawn, :white, [7,7]
 
-      expect(game.check_promotion :white).to eql([[7,7]])  
+      expect(game.check_promotion).to eql([[7,7]])  
     end
     it "Works with black pieces" do
       game = Chess.new
+      game.color = :black
       game.create_piece :pawn, :black, [0,0]
 
-      expect(game.check_promotion :black).to eql([[0,0]])  
+      expect(game.check_promotion).to eql([[0,0]])  
     end
     it "Only works with pawns" do
       game = Chess.new
+      game.color = :black
       game.create_piece :bishop, :black, [0,0]
 
-      expect(game.check_promotion :black).to eql([])  
+      expect(game.check_promotion).to eql([])  
     end
   end
 end
