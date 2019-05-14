@@ -1,3 +1,5 @@
+# README
+
 This is the final project of the 'Ruby Programming' course on [The Odin Project](https://www.theodinproject.com/courses/ruby-programming/lessons/ruby-final-project).
 
 With this project my aim was to use everything I learned in order to produce the best code I could, not only a working game. I'm quite satisfied with how it ended up, I had a clear vision on how to code this game and the final result is very close to how I tought it would be.
